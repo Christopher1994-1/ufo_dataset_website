@@ -1,0 +1,29 @@
+/* Main container navbar container  */
+.navbar {
+    box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    background-color: black;
+}
+
+
+/* Main css code for the navbar links container */
+.navbar_links {
+    display: flex;
+    justify-content: space-between;
+    width: 45%;
+}
+
+
+/* CSS code for the navbar links for individual a tags */
+.navbar_links a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+
+/* CSS code for navbar individual a tags hover effect */
+.navbar_links a:hover {
+    text-shadow: 6px 0px grey;
+}

@@ -25,5 +25,5 @@
 
 /* CSS code for navbar individual a tags hover effect */
 .navbar_links a:hover {
-    text-shadow: 6px 0px grey;
+    text-shadow: 8px 0px rgb(141, 141, 141);
 }

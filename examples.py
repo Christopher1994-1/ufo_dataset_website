@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import sys
 import matplotlib
+import json
 
 
 
@@ -15,7 +16,36 @@ dataframe = pd.read_csv('ufo_data_nuforc.csv')
 
 
 # Pull out a row 
-# view = dataframe.loc[1]
+# rows = dataframe.head(5)
+# json_rows = []
+# for _, row in rows.iterrows():
+#     json_row = row.to_dict()
+#     json_rows.append(json_row)
+import datetime
+import calendar
+
+current_month = datetime.datetime.now().month
+current_year = datetime.datetime.now().year
+
+if current_month == 1:
+    prev_month = 12
+    prev_year = current_year - 1
+elif current_month == 2:
+    prev_month = 12
+    prev_year = current_year
+
+# start_date = f"{prev_month}/01/{prev_year[2:]}"
+# end_date = f"{prev_month}/{calendar.monthrange(prev_year, prev_month)[1]}/{prev_year[2:]}"
+start_date = "12/01/22"
+end_date = "12/31/22"
+
+
+rows = dataframe[(dataframe["date"] >= start_date) & (dataframe["date"] <= end_date)]
+json_rows = []
+for _, row in rows.iterrows():
+    json_row = row.to_dict()
+    json_rows.append(json_row)
+print(json_rows)
 """Name: summary, Length: 117829, dtype: object
 posted                                          12/22/22
 date                                            12/21/22
@@ -28,7 +58,9 @@ summary     4-5 orange balls of light in a straight line
 images                                               NaN
 Name: 1, dtype: object
 """
-# print(view)
+
+# for thing in json_rows:
+#     print(thing['date'])
 
 
 
@@ -87,7 +119,7 @@ Name: shape, dtype: int64
 
 
 # Get Relative Frequency - Percentage
-view = dataframe['shape'].value_counts(normalize=True)
+# view = dataframe['shape'].value_counts(normalize=True)
 
 # get value and * 100
 """
@@ -108,7 +140,7 @@ Flash        0.017882
 """
 
 
-print(view[0] * 100)
+# print(view[0] * 100)
 
 
 

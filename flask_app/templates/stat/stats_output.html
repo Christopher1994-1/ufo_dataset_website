@@ -1,0 +1,89 @@
+{% block data_output %}
+
+<link rel="stylesheet" href="/static/css/main_data_output.css">
+<link rel="stylesheet" href="/static/css/stat_data_output.css">
+
+<!-- search.html -->
+<div class="form-search">
+    <p>Search Loctation (city, state) *important comma between city and state, ex: las vegas, nv</p>
+    <form action="/index/search" method="post">
+        <input type="text" name="query" class="input-field" placeholder="Enter Loctation">
+        <input type="submit" value="Find" class="find-button">
+    </form>
+</div>
+
+
+<div class="to-choose-from">
+    <a href="{{ url_for ('index_lasted') }}" id="link">Latest</a>
+    <a href="{{ url_for ('index_month') }}" id="link">Month</a>
+    <a href="{{ url_for ('statistics') }}"  id="link" style="text-decoration: underline;">Statistics</a>
+    <a href="#">Info</a>
+</div>
+
+
+
+<!-- code for main container -->
+<div class="main-data-output-container">
+    <!-- code for container for output -->
+    <p id="given-data">Take total number of rows as {{ number_of_rows }} as n</p>
+    <h1 id="stat-headers">UFO Shapes:</h1>
+    <div class="main-data-output-output1">
+
+        <div class="first_stats_row">
+            <table>
+                <tr>
+                  <th>Statistic:</th>
+                  <th>Value:</th>
+                </tr>
+                {% for key, value in merged_data.items() %}
+                <tr>
+                  <td>UFO Shape - ({{ key.title() }})</td>
+                  <td>{{ value[1] }} or ( {{ value[0] }} ) out of n</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+
+
+    <h1 id="stat-headers">State Info:</h1>
+    <div class="main-data-output-output1">
+
+        <div class="first_stats_row">
+            <table>
+                <tr>
+                  <th>State:</th>
+                  <th>Value:</th>
+                </tr>
+                {% for state, count in state_dict.items() %}
+                <tr>
+                  <td>State - ({{ state }})</td>
+                  <td>{{ count[1] }} or ( {{ count[0] }} ) out of n</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+<br><br><br><br><br><br><br><br>
+
+
+<script>
+    window.onload = function() {
+      let scrollpos = document.cookie.match(/scrollpos=(\d+)/);
+      if (scrollpos) {
+        window.scrollTo(0, scrollpos[1]);
+      }
+    };
+  
+</script>
+
+
+
+{% endblock data_output %}

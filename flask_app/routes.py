@@ -3,6 +3,7 @@ from flask import render_template, request
 import pandas as pd
 import json
 import datetime
+from . import states
 import calendar
 
 
@@ -23,10 +24,6 @@ def index():
         json_row = row.to_dict()
         json_rows.append(json_row)
     
-    if request.method == 'POST':
-        search = request.form['query']
-        return render_template('index.html', search=search, json_rows=json_rows, is_index=index_cap)
-    
     
         
     return render_template('index.html', json_rows=json_rows, is_index=index_cap)
@@ -36,21 +33,52 @@ def index():
 # html route for search result
 @app.route('/index/search', methods=["GET", "POST"])
 def index_search():
-    global index_cap
-    if len(index_cap) >= 1:
-        index_cap = []
-        index_cap.append(0)
+    rows = dataframe.head(5)
+    json_rows = []
+    for _, row in rows.iterrows():
+        json_row = row.to_dict()
+        json_rows.append(json_row)
+    
+    
+    
+    # if search query == 'something'
+    if request.method == 'POST':
+        search = request.form['query'].split(',')
+        if len(search) > 1:
+            city = search[0].title().strip()
+            state = search[1].upper().strip()
+
+            rows = dataframe[(dataframe["state"] == state) & (dataframe['city'] == city)]
+
+            json_rows = []
+            for _, row in rows.iterrows():
+                json_row = row.to_dict()
+                json_rows.append(json_row)
+            
+        return render_template('/search/searched.html', search=search, json_rows=json_rows)
+    
+    
+    # if search query == ''
+    elif request.method == 'POST':
+        search = request.form['query']
+        if search == '':
+            rows = dataframe.head(5)
+            json_rows = []
+            for _, row in rows.iterrows():
+                json_row = row.to_dict()
+                json_rows.append(json_row)
+                
+        return render_template('/search/searched.html', search=search, json_rows=json_rows)
         
-    return render_template('index.html', is_index=index_cap)
+    
+    
+        
+    return render_template('/search/searched.html', search=search, json_rows=json_rows)
 
 
 # html route for month clicked
-@app.route('/index/month', methods=["GET", "POST"])
+@app.route('/month_frame', methods=["GET", "POST"])
 def index_month():
-    global index_cap
-    if len(index_cap) >= 1:
-        index_cap = []
-        index_cap.append(0)
     
     date = str(datetime.datetime.now()).split(" ")[0].split('-')
 
@@ -81,11 +109,10 @@ def index_month():
         json_row = row.to_dict()
         json_rows.append(json_row)
     
-    return render_template('index.html', json_rows=json_rows, is_index=index_cap)
+    return render_template('/month/month_index.html', json_rows=json_rows, is_index=index_cap)
 
 
-
-
+# html route for the latest a tag clicked
 @app.route('/lastest_index', methods=["GET", "POST"])
 def index_lasted():
     global index_cap
@@ -100,4 +127,45 @@ def index_lasted():
         json_rows.append(json_row)
 
     return render_template('/latest/latest_index.html', json_rows=json_rows, is_index=index_cap)
+
+
+# html route for the statistics a tag clicked
+@app.route('/statistics', methods=['GET', 'POST'])
+def statistics():
+    number_of_rows = str(dataframe.shape[0])
     
+    
+    view = dataframe['shape'].value_counts()
+    new = view.to_dict()
+
+    # for the shape of ufo
+    merged_data = {}
+    for key, value in new.items():
+        lower_key = key.lower()
+        if lower_key in merged_data:
+            merged_data[lower_key] += value
+        else:
+            merged_data[lower_key] = value 
+    n = {}
+    for key1, value1 in merged_data.items():
+        v = str(int(value1) / int(number_of_rows) * 100)
+        v = v[:4] + "%"
+        n[key1] = [value1, v]
+        
+        
+    # for the state percentage
+    state_count = {}
+    changing = dataframe['state'].value_counts()
+    n_dict = changing.to_dict()
+    for state, count in n_dict.items():
+        per = str(int(count) / int(number_of_rows) * 100)
+        per = per[:4] + "%"
+        st = states.state_codes[state]
+        
+        state_count[st] = [count, per]
+    
+    return render_template('/stat/stats_index.html', 
+                           number_of_rows=number_of_rows, 
+                           merged_data=n,
+                           state_dict=state_count,
+    )

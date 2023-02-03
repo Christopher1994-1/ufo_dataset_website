@@ -20,11 +20,41 @@
 </div>
 
 
-
-
 <!-- code for when/if user types in something -->
 {% if search %}
-    <h1>{{ search }}</h1>
+    <!-- code for main container -->
+    <div class="main-data-output-container">
+        <!-- code for container for output -->
+        <div class="main-data-output-output">
+            {% for row in json_rows %}
+            <table>
+                <tr>
+                <th>Posted</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Shape</th>
+                <th>Duration</th>
+                <th>Summary</th>
+                </tr>
+                <tr>
+                <td>{{ row['posted'] }}</td>
+                <td>{{ row['date'] }}</td>
+                <td>{{ row['time'] }}</td>
+                <td>{{ row['city'] }}</td>
+                <td>{{ row['state'] }}</td>
+                <td>{{ row['shape'] }}</td>
+                <td>{{ row['duration'] }}</td>
+                <td>{{ row['summary'] }}</td>
+                </tr>
+                <!-- Add four more copies of the data here -->
+            </table>
+            {% endfor %}
+        </div>
+    </div>
+
+
 {% else %}
     <!-- code for main container -->
 <div class="main-data-output-container">
@@ -64,9 +94,15 @@
 
 
 
-
-
-
+<script>
+    window.onload = function() {
+      let scrollpos = document.cookie.match(/scrollpos=(\d+)/);
+      if (scrollpos) {
+        window.scrollTo(0, scrollpos[1]);
+      }
+    };
+  
+</script>
 
 
 

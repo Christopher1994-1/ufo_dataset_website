@@ -4,7 +4,7 @@
 
 <!-- search.html -->
 <div class="form-search">
-    <p>Search Loctation (city, state) *important comma between city and state, ex: las vegas, nv</p>
+  <p>Search Loctation (city, state) *important comma between city and state, ex: las vegas, nv</p>
     <form action="/index/search" method="post">
         <input type="text" name="query" class="input-field" placeholder="Enter Loctation">
         <input type="submit" value="Find" class="find-button">
@@ -13,7 +13,7 @@
 
 
 <div class="to-choose-from">
-    <a href="{{ url_for ('index_lasted') }}" id="link">Latest</a>
+    <a href="{{ url_for ('index_lasted') }}" id="link" style="text-decoration: underline;">Latest</a>
     <a href="{{ url_for ('index_month') }}" id="link">Month</a>
     <a href="{{ url_for ('statistics') }}"  id="link">Statistics</a>
     <a href="#">Info</a>
@@ -64,7 +64,15 @@
 
 
 
+<script>
+  window.onload = function() {
+    let scrollpos = document.cookie.match(/scrollpos=(\d+)/);
+    if (scrollpos) {
+      window.scrollTo(0, scrollpos[1]);
+    }
+  };
 
+</script>
 
 
 

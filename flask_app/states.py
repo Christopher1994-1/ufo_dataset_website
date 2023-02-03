@@ -1,7 +1,3 @@
-import datetime
-import calendar
-import pandas as pd
-
 state_codes = {
     'CA': "California", 
     'FL': "Florida", 
@@ -57,34 +53,3 @@ state_codes = {
     'PR': "Puerto Rico", 
     'VI': "Virgin Islands",
 }
-
-
-
-dataframe = pd.read_csv('ufo_data_nuforc.csv')
-number_of_rows = dataframe.shape[0]
-
-
-view = dataframe['duration'].value_counts(dropna=True).head(40)
-
-# TODO add a total sighting for month of etc 
-
-print(view)
-
-
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -81,6 +81,7 @@ table {
 .form-search p {
     margin-bottom: 0;
     color: white;
+    font-size: 12px;
 }
 
 .form-search .input-field {

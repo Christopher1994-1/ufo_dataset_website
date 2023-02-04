@@ -11,6 +11,25 @@ dataframe = pd.read_csv('ufo_data_nuforc.csv')
 index_cap = []
 
 
+def search_result_paragraph(s):
+    city = s[0].title().strip()
+    state = s[1].upper().strip()
+    
+    rows = dataframe[(dataframe["state"] == state) & (dataframe['city'] == city)]
+    reformed_state = states.state_codes[state]
+
+    rows["date"] = pd.to_datetime(rows["date"])
+    oldest_date = str(rows["date"].min()).split(' ')[0].split('-')[0]
+
+    number_of_rows = rows.shape[0]
+
+    search_result_para = f"Search results of {number_of_rows} rows for {city}, {reformed_state} since {oldest_date}"
+    
+    return search_result_para
+
+
+
+
 # base index html route
 @app.route('/', methods=["GET", "POST"])
 def index():
@@ -47,15 +66,22 @@ def index_search():
         if len(search) > 1:
             city = search[0].title().strip()
             state = search[1].upper().strip()
+            
+            search_result_para = search_result_paragraph(search)
 
             rows = dataframe[(dataframe["state"] == state) & (dataframe['city'] == city)]
-
+            
             json_rows = []
             for _, row in rows.iterrows():
                 json_row = row.to_dict()
                 json_rows.append(json_row)
             
-        return render_template('/search/searched.html', search=search, json_rows=json_rows)
+            
+        return render_template('/search/searched.html', 
+                               search=search, 
+                               json_rows=json_rows,
+                               search_para=search_result_para,
+                               )
     
     
     # if search query == ''
@@ -133,6 +159,7 @@ def index_lasted():
 @app.route('/statistics', methods=['GET', 'POST'])
 def statistics():
     number_of_rows = str(dataframe.shape[0])
+    formatted_string = "{:,}".format(int(number_of_rows))
     
     
     view = dataframe['shape'].value_counts()
@@ -165,7 +192,14 @@ def statistics():
         state_count[st] = [count, per]
     
     return render_template('/stat/stats_index.html', 
-                           number_of_rows=number_of_rows, 
+                           number_of_rows=formatted_string, 
                            merged_data=n,
                            state_dict=state_count,
     )
+    
+
+
+
+@app.route('/infomation', methods=["GET", "POST"])
+def info():
+    return render_template('/info/info_index.html')

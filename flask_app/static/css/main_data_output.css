@@ -98,3 +98,24 @@ table {
 .form-search .find-button:hover {
     background-color: rgb(206, 206, 206);
 }
+
+
+
+
+/* css code for the search result para */
+#search-results-para {
+    width: 80%;
+    text-align: center;
+    margin: auto;
+    color: white;
+}
+
+
+
+/* css code for the month updated update */
+#month-updated {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    color: white;
+}

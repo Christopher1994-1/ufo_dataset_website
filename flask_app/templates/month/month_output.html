@@ -16,7 +16,7 @@
     <a href="{{ url_for ('index_lasted') }}" id="link">Latest</a>
     <a href="{{ url_for ('index_month') }}" id="link" style="text-decoration: underline;">Month</a>
     <a href="{{ url_for ('statistics') }}"  id="link">Statistics</a>
-    <a href="#">Info</a>
+    <a href="{{ url_for ('info') }}">Info</a>
 </div>
 
 
@@ -27,6 +27,7 @@
     <h1>{{ search }}</h1>
 {% else %}
     <!-- code for main container -->
+    <p id="month-updated">Month updated as of December, 2022</p>
 <div class="main-data-output-container">
 
     <!-- code for container for output -->

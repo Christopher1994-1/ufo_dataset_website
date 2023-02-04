@@ -1,6 +1,7 @@
 import datetime
 import calendar
 import pandas as pd
+from flask_app import states
 
 state_codes = {
     'CA': "California", 
@@ -61,18 +62,15 @@ state_codes = {
 
 
 dataframe = pd.read_csv('ufo_data_nuforc.csv')
-number_of_rows = dataframe.shape[0]
+
+number_of_rows = str(dataframe.shape[0])
 
 
-view = dataframe['duration'].value_counts(dropna=True).head(40)
-
-# TODO add a total sighting for month of etc 
-
-print(view)
+formatted_string = "{:,}".format(int(number_of_rows))
 
 
 
-    
+print(formatted_string)
     
 
 

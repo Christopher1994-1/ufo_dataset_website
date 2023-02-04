@@ -1,0 +1,52 @@
+{% block data_output %}
+
+<link rel="stylesheet" href="/static/css/main_data_output.css">
+<link rel="stylesheet" href="/static/css/info_output.css">
+
+
+<!-- search.html -->
+<div class="form-search">
+    <p>Search Loctation (city, state) *important comma between city and state, ex: las vegas, nv</p>
+    <form action="/index/search" method="post">
+        <input type="text" name="query" class="input-field" placeholder="Enter Loctation">
+        <input type="submit" value="Find" class="find-button">
+    </form>
+</div>
+
+
+<div class="to-choose-from">
+    <a href="{{ url_for ('index_lasted') }}">Latest</a>
+    <a href="{{ url_for ('index_month') }}">Month</a>
+    <a href="{{ url_for ('statistics') }}">Statistics</a>
+    <a href="{{ url_for ('info') }}" id="link" style="text-decoration: underline;">Info</a>
+</div>
+
+
+
+
+    <!-- code for main container -->
+<div class="main-data-output-container">
+
+    <!-- code for container for output -->
+    <div class="main-data-output-output1">
+        <div class="info_para">This website uses data from the National UFO Reporting Center (NUFORC)</div>
+        <br>
+        <div class="info_para">See more info by clicking <a href="https://nuforc.org/" target="_blank">here</a></div>
+    </div>
+
+</div>
+
+
+
+<script>
+    window.onload = function() {
+      let scrollpos = document.cookie.match(/scrollpos=(\d+)/);
+      if (scrollpos) {
+        window.scrollTo(0, scrollpos[1]);
+      }
+    };
+  
+</script>
+
+
+{% endblock data_output %}

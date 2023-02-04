@@ -16,13 +16,14 @@
     <a href="{{ url_for ('index_lasted') }}" id="link">Latest</a>
     <a href="{{ url_for ('index_month') }}" id="link">Month</a>
     <a href="{{ url_for ('statistics') }}"  id="link">Statistics</a>
-    <a href="#">Info</a>
+    <a href="{{ url_for ('info') }}" id="link">Info</a>
 </div>
 
 
 <!-- code for when/if user types in something -->
 {% if search %}
     <!-- code for main container -->
+    <p id="search-results-para">{{ search_para }}</p>
     <div class="main-data-output-container">
         <!-- code for container for output -->
         <div class="main-data-output-output">

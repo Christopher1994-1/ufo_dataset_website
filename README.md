@@ -8,8 +8,11 @@ location to see the relevant data in that area.
 This project showcases my ability with working with a large dataset and how I was able to distribute that data for users to consume in a creative way.
 
 
-
+Home Page
 ![Example Image](/flask_app/static/images/s1.png)
+Home Page / Showing latest sightings
 ![Example Image](/flask_app/static/images/s2.png)
+Home Page / Showing monthly results
 ![Example Image](/flask_app/static/images/s3.png)
+Home Page / Showing statisics about the dataset
 ![Example Image](/flask_app/static/images/s4.png)

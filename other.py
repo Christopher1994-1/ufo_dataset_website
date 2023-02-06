@@ -73,35 +73,6 @@ dataframe = pd.read_csv('ufo_data_nuforc.csv')
 
 
 
-# Connect to the database
-mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password="passw0rd0098",
-  database="ufo_data",
-)
-
-# Create a cursor to execute the queries
-cursor = mydb.cursor()
-
-
-command = "CREATE TABLE "
-cursor.execute(command)
-# for i in cursor:
-#     print(i)
-
-
-
-
-
-
-
-# Close the cursor and connection
-# cursor.close()
-# cnx.close()
-
-
-
 
 
 

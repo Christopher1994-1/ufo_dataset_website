@@ -9,7 +9,7 @@ This project showcases my ability with working with a large dataset and how I wa
 
 
 
-![Example Image](/flask_site/static/images/s1.png)
+![Example Image](/flask_app/static/images/s1.png)
 ![Example Image](/static/images/s2.png)
 ![Example Image](/static/images/s3.png)
 ![Example Image](/static/images/s4.png)

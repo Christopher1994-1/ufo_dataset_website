@@ -1,10 +1,11 @@
 from flask_app import app
-from flask import render_template, request
+from flask import render_template, request, redirect, session
 import pandas as pd
 import json
 import datetime
 from . import states
 import calendar
+import mysql.connector
 
 
 dataframe = pd.read_csv('ufo_data_nuforc.csv')
@@ -47,6 +48,33 @@ def index():
         
     return render_template('index.html', json_rows=json_rows, is_index=index_cap)
 
+
+# html route for when a user signs up
+@app.route('/index/sign_up', methods=["POST", "GET"])
+def index_sign_up():
+    if request.method == "POST":
+        name = request.form['name']
+        email = request.form['email']
+        location = request.form['loc']
+        session['name'] = name
+        session['email'] = email
+        session['location'] = location
+        
+        # code here to add user info to a database and call first_email function
+        
+    return redirect('/index/confirmation_sign_up_success')
+
+
+
+
+
+# html route for sign up confirmation html page
+@app.route('/index/confirmation_sign_up_success')
+def confirmation():
+    name = session.get('name')
+    email = session.get('email')
+    location = session.get('location')
+    return render_template('confirmation.html', name=name, email=email, location=location)
 
 
 # html route for search result
@@ -102,6 +130,9 @@ def index_search():
     return render_template('/search/searched.html', search=search, json_rows=json_rows)
 
 
+
+
+
 # html route for month clicked
 @app.route('/month_frame', methods=["GET", "POST"])
 def index_month():
@@ -138,6 +169,9 @@ def index_month():
     return render_template('/month/month_index.html', json_rows=json_rows, is_index=index_cap)
 
 
+
+
+
 # html route for the latest a tag clicked
 @app.route('/lastest_index', methods=["GET", "POST"])
 def index_lasted():
@@ -153,6 +187,10 @@ def index_lasted():
         json_rows.append(json_row)
 
     return render_template('/latest/latest_index.html', json_rows=json_rows, is_index=index_cap)
+
+
+
+
 
 
 # html route for the statistics a tag clicked
@@ -200,6 +238,55 @@ def statistics():
 
 
 
+
+
+# route for the info link 
 @app.route('/infomation', methods=["GET", "POST"])
 def info():
     return render_template('/info/info_index.html')
+
+
+
+
+
+
+# route for the web page 'about'
+@app.route('/about', methods=["GET", "POST"])
+def about():
+    return render_template('about.html')
+
+
+
+
+
+
+
+
+# route for the web page 'contact'
+@app.route('/contact', methods=["GET", "POST"])
+def contact():
+    return render_template('contact.html')
+
+
+
+# route for the web function 'contact_submit'
+@app.route('/contact_submit', methods=["GET", "POST"])
+def contact_submit():
+    if request.method == "POST":
+        name = request.form['name']
+        email = request.form['email']
+        message = request.form['message']
+        
+        # Connect to the database
+        cnx = mysql.connector.connect(
+        host="localhost",
+        user="root",
+        password="passw0rd0098",
+        database="ufo_data"
+        )
+        
+    return render_template('contact_submit.html', 
+                           name=name,
+                           email=email,
+                           message=message
+        )

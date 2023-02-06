@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+
+
+{% block index %}
+
+
+
+{% if name %}
+    <div class="sign-up-div" style="width: 80%; margin: auto; color: white; text-align: center; margin-top: 20px; padding: 60px;">
+        <h1>Sign-Up Confirmation</h1>
+        <p>Thank you for signing up! You will now get emails when there are new sighting in your area!</p>
+        <p>Your account information.</p>
+
+        <hr>
+
+        <ul style="list-style-type: none;">
+            <li>Name: {{ name }}</li>
+            <li>Email: {{ email }}</li>
+            <li>Location: {{ location }}</li>
+          </ul>
+    </div>
+{% else %}
+    <h1>nothing</h1>
+{% endif %}
+
+{% endblock index %}

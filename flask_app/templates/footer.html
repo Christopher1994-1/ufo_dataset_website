@@ -1,0 +1,28 @@
+{% block footer %}
+
+<link rel="stylesheet" href="/static/css/footer.css">
+
+
+
+<div class="main_footer">
+    <h1>Subscribe</h1>
+    <p id="footer-p-one">Sign up with your email, name and loctation for updates on sightings in your area.</p>
+
+    <div class="forms">
+        <form  action="/index/sign_up" method="post">
+            <input type="text" name="name" placeholder="First Name:">
+            <input type="email" name="email" placeholder="Email Address:">
+            <input type="text" name="loc" placeholder="ex: Las Vegas, NV:">
+            <input type="submit" value="Submit" class="find-button">
+        </form>
+    </div>
+
+    <hr>
+
+    <p id="footer-p-two">Check out National UFO Reporting Center <a href="https://nuforc.org/">here</a></p>
+
+    
+</div>
+
+
+{% endblock footer %}

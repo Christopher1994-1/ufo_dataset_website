@@ -1,0 +1,38 @@
+/* CSS code for the main footer container */
+.main_footer {
+    text-align: center;
+    color: white;
+    box-shadow: 0px -5px 10px 2px #8080804d;
+    padding: 10px;
+}
+
+
+/* css code for the main footer forms */
+.main_footer .forms {
+    margin-bottom: 20px;
+}
+
+/* css code for the main footer forms inputs  */
+.main_footer .forms input {
+    border: 2px solid grey;
+    background-color: gainsboro;
+}
+
+/* css code for the main footer forms inputs > placeholder  */
+.main_footer .forms input::placeholder {
+    color: black;
+}
+
+
+/* css code for the main footer forms button  */
+.main_footer .forms button {
+    padding: 7px;
+    border-radius: 5px;
+}
+
+/* css code for the main footer hr  */
+.main_footer hr {
+    width: 60%;
+    margin: auto;
+    margin-bottom: 10px;
+}

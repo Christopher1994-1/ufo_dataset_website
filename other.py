@@ -2,6 +2,7 @@ import datetime
 import calendar
 import pandas as pd
 from flask_app import states
+import mysql.connector
 
 state_codes = {
     'CA': "California", 
@@ -63,15 +64,6 @@ state_codes = {
 
 dataframe = pd.read_csv('ufo_data_nuforc.csv')
 
-number_of_rows = str(dataframe.shape[0])
-
-
-formatted_string = "{:,}".format(int(number_of_rows))
-
-
-
-print(formatted_string)
-    
 
 
 
@@ -80,6 +72,33 @@ print(formatted_string)
 
 
 
+
+# Connect to the database
+mydb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  password="passw0rd0098",
+  database="ufo_data",
+)
+
+# Create a cursor to execute the queries
+cursor = mydb.cursor()
+
+
+command = "CREATE TABLE "
+cursor.execute(command)
+# for i in cursor:
+#     print(i)
+
+
+
+
+
+
+
+# Close the cursor and connection
+# cursor.close()
+# cnx.close()
 
 
 

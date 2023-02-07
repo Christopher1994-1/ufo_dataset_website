@@ -1,32 +1,287 @@
 from flask_app import app
-from flask import render_template, request, redirect, session
+from flask import render_template, request, redirect, session, Flask
 import pandas as pd
 import json
 import datetime
-from . import states
 import calendar
 import mysql.connector
 
 
+# app = Flask(__name__)
+
 dataframe = pd.read_csv('ufo_data_nuforc.csv')
+# dataframe = pd.read_csv('/home/cejkirk/mysite/ufo_data_nuforc.csv') and on line 472 in month_frame function
 index_cap = []
 
+state_names = {
+    'california': "CA", 
+    'florida': "FL", 
+    'washington': "WA", 
+    'texas': "TX", 
+    'new york': "NY", 
+    'arizona': "AZ", 
+    'pennsylvania': "PA", 
+    'ohio': "OH", 
+    'illinois': "IL",
+    'north carolina': "NC",
+    'michigan': "MI", 
+    'oregon': "OR", 
+    'colorado': "CO",
+    'new jersey': "NJ", 
+    'missouri': "MO", 
+    'georgia': "GA", 
+    'massachusetts': "MA", 
+    'virginia': "VA", 
+    'wisconsin': "WI", 
+    'indiana': "IN", 
+    'tennessee': "TN", 
+    'south carolina': "SC", 
+    'minnesota': "MN", 
+    'connecticut': "CT", 
+    'maryland': "MD", 
+    'kentucky': "KY", 
+    'nevada': "NV",
+    'new mexico': 'NM', 
+    'utah': "UT", 
+    'oklahoma': "OK", 
+    'alabama': "AL", 
+    'idaho': "ID", 
+    'iowa': "IA", 
+    'maine': "ME", 
+    'arkansas': "AR", 
+    'new hampshire': "NH", 
+    'kansas': "KS", 
+    'louisiana': "LA", 
+    'montana': "MT", 
+    'west virginia': "WV", 
+    'mississippi': "MS", 
+    'nebraska': "NE", 
+    'hawaii': "HI", 
+    'alaska': "AK", 
+    'vermont': "VT", 
+    'rhode island': "RI", 
+    'delaware': "DE", 
+    'wyoming': "WY", 
+    'south dakota': "SD",
+    'north dakota': "ND",
+    'puerto rico': "PR", 
+    'virgin islands': "VI",
+    
+}
 
-def search_result_paragraph(s):
+state_codes = {
+    'CA': "California", 
+    'FL': "Florida", 
+    'WA': "Washington", 
+    'TX': "Texas", 
+    'NY': "New York", 
+    'AZ': "Arizona", 
+    'PA': "Pennsylvania", 
+    'OH': "Ohio", 
+    'IL': "Illinois",
+    'NC': "North Carolina",
+    'MI': "Michigan", 
+    'OR': "Oregon", 
+    'CO': "Colorado",
+    'NJ': "New Jersey", 
+    'MO': "Missouri", 
+    'GA': "Georgia", 
+    'MA': "Massachusetts", 
+    'VA': "Virginia", 
+    'WI': "Wisconsin", 
+    'IN': "Indiana", 
+    'TN': "Tennessee", 
+    'SC': "South Carolina", 
+    'MN': "Minnesota", 
+    'CT': "Connecticut", 
+    'MD': "Maryland", 
+    'KY': "Kentucky", 
+    'NV': "Nevada",
+    'NM': 'New Mexico', 
+    'UT': "Utah", 
+    'OK': "Oklahoma", 
+    'AL': "Alabama", 
+    'ID': "Idaho", 
+    'IA': "Iowa", 
+    'ME': "Maine", 
+    'AR': "Arkansas", 
+    'NH': "New Hampshire", 
+    'KS': "Kansas", 
+    'LA': "Louisiana", 
+    'MT': "Montana", 
+    'WV': "West Virginia", 
+    'MS': "Mississippi", 
+    'NE': "Nebraska", 
+    'HI': "Hawaii", 
+    'AK': "Alaska", 
+    'VT': "Vermont", 
+    'RI': "Rhode Island", 
+    'DE': "Delaware", 
+    'WY': "Wyoming", 
+    'SD': "South Dakota",
+    'ND': "North Dakota",
+    'DC': "Washington, DC", 
+    'PR': "Puerto Rico", 
+    'VI': "Virgin Islands",
+}
+
+
+
+
+
+def has_uppercase(string):
+    for char in string:
+        if char.isupper():
+            return True
+    return False
+
+
+
+########################## Search result functions ##########################
+
+
+# search 'las vegas, nv'
+def city_state_lower(s):
+    
+    # Getting the search result 
+    
+    #############################################################
+    # indexing elements and capping and stripping it
     city = s[0].title().strip()
     state = s[1].upper().strip()
     
+    # checking to see if the state and city are in the dataset
     rows = dataframe[(dataframe["state"] == state) & (dataframe['city'] == city)]
-    reformed_state = states.state_codes[state]
+    
+    
+    # getting the state to add to search result, 'Nevada' from state_codes Dict
+    reformed_state = state_codes[state]
 
+    # getting oldest date in dataset
     rows["date"] = pd.to_datetime(rows["date"])
     oldest_date = str(rows["date"].min()).split(' ')[0].split('-')[0]
 
+    # getting the total number of rows 
     number_of_rows = rows.shape[0]
 
+    # search result infomation to be returned 
+    search_result_para = f"Search results of {number_of_rows} rows for {city}, {reformed_state} since {oldest_date}"
+    
+    
+    
+    return search_result_para
+
+
+# search 'las vegas, nevada'
+def city_state_whole(s):
+    
+    # indexing elements and capping and stripping it
+    city = s[0].title().strip()
+    state = s[1].strip()
+    
+    # indexing the state_names dict for value
+    state = state_names[state]
+    
+    # checking to see if the state and city are in the dataset
+    rows = dataframe[(dataframe["state"] == state) & (dataframe['city'] == city)]
+    
+    # getting the state to add to search result, 'Nevada' from state_codes Dict
+    reformed_state = state_codes[state]
+
+    # getting oldest date in dataset
+    rows["date"] = pd.to_datetime(rows["date"])
+    oldest_date = str(rows["date"].min()).split(' ')[0].split('-')[0]
+
+    # getting the total number of rows 
+    number_of_rows = rows.shape[0]
+
+    # search result infomation to be returned 
     search_result_para = f"Search results of {number_of_rows} rows for {city}, {reformed_state} since {oldest_date}"
     
     return search_result_para
+
+
+# search 'nevada'
+def just_state(s):
+    
+    # indexing elements and capping and stripping it
+    state = str(s).strip().upper() # -> NV
+    
+    # indexing the state_codes dict for value
+    reformed_state = state_codes[state] # -> Nevada
+    
+    # checking to see if the state and city are in the dataset
+    rows = dataframe[(dataframe["state"] == state)]
+
+
+    # getting oldest date in dataset
+    rows["date"] = pd.to_datetime(rows["date"])
+    oldest_date = str(rows["date"].min()).split(' ')[0].split('-')[0] # -> 1973
+
+    # getting the total number of rows 
+    number_of_rows = rows.shape[0]
+
+    # search result infomation to be returned 
+    search_result_para = f"Search results of {number_of_rows} rows for the state of {reformed_state} since {oldest_date}"
+    
+    return search_result_para
+
+
+
+# search 'Nevada'
+def just_state2(s):
+    
+    # indexing elements and capping and stripping it
+    state = str(s).strip() # -> nevada
+    
+    #indexing the state_codes dict for value
+    reformed_state = state_names[state] # -> NV
+    
+    # checking to see if the state and city are in the dataset
+    rows = dataframe[(dataframe["state"] == reformed_state)]
+
+
+    # getting oldest date in dataset
+    rows["date"] = pd.to_datetime(rows["date"])
+    oldest_date = str(rows["date"].min()).split(' ')[0].split('-')[0] # -> 1973
+
+    # getting the total number of rows 
+    number_of_rows = rows.shape[0]
+
+    # search result infomation to be returned 
+    search_result_para = f"Search results of {number_of_rows} rows for the state of {state.title()} since {oldest_date}"
+    
+    return search_result_para
+
+
+
+# search 'nevada'
+def just_state3(s):
+    
+    # indexing elements and capping and stripping it
+    state = str(s).strip() # -> NV
+    
+    #indexing the state_codes dict for value
+    reformed_state = state_codes[state] # -> Nevada
+    
+    # checking to see if the state and city are in the dataset
+    rows = dataframe[(dataframe["state"] == state)]
+
+
+    # getting oldest date in dataset
+    rows["date"] = pd.to_datetime(rows["date"])
+    oldest_date = str(rows["date"].min()).split(' ')[0].split('-')[0] # -> 1973
+
+    # getting the total number of rows 
+    number_of_rows = rows.shape[0]
+
+    # search result infomation to be returned 
+    search_result_para = f"Search results of {number_of_rows} rows for the state of {reformed_state} since {oldest_date}"
+    
+    return search_result_para
+
+
+
 
 
 
@@ -87,49 +342,108 @@ def index_search():
         json_rows.append(json_row)
     
     
-    
     # if search query == 'something'
     if request.method == 'POST':
-        search = request.form['query'].split(',')
-        if len(search) > 1:
-            city = search[0].title().strip()
-            state = search[1].upper().strip()
-            
-            search_result_para = search_result_paragraph(search)
-
-            rows = dataframe[(dataframe["state"] == state) & (dataframe['city'] == city)]
-            
-            json_rows = []
-            for _, row in rows.iterrows():
-                json_row = row.to_dict()
-                json_rows.append(json_row)
-            
-            
-        return render_template('/search/searched.html', 
-                               search=search, 
-                               json_rows=json_rows,
-                               search_para=search_result_para,
-                               )
-    
-    
-    # if search query == ''
-    elif request.method == 'POST':
         search = request.form['query']
-        if search == '':
-            rows = dataframe.head(5)
+        
+        
+        # checking to see if search query == 'las vegas, nv'
+        if search.count(','):
+            query = search.split(',')
+            city = query[0].title().strip()
+            state = query[1].upper().strip()
+        
+            # checking if state == nv
+            if len(state) == 2:
+                # getting the return result for string 
+                search_result_info = city_state_lower(query)
+                
+                rows_row = dataframe[(dataframe["state"] == state) & (dataframe['city'] == city)]
+    
+    
+                json_rows = []
+                for _, row in rows_row.iterrows():
+                    json_row = row.to_dict()
+                    json_rows.append(json_row)
+                
+                return render_template('/search/searched.html', search=search, json_rows=json_rows, search_result_info=search_result_info)
+            
+            
+            # checking if state == nevada
+            else:
+                # getting the state to be lowercase
+                state = state.lower()
+                # indexing the state from the state_names dict to gets it code
+                state_to_state = state_names[state]
+                # Conditional statements to check if state and city exist in dataset
+                rows = dataframe[(dataframe["state"] == state_to_state) & (dataframe['city'] == city)]
+                
+                # Getting the search result
+                search_result_info = city_state_whole(query)
+            
+            
+                json_rows = []
+                for _, row in rows.iterrows():
+                    json_row = row.to_dict()
+                    json_rows.append(json_row)
+                    
+                return render_template('/search/searched.html', search=search, json_rows=json_rows, search_result_info=search_result_info)
+            
+    
+        #checking to see search query == 'nv'
+        elif len(search) == 2 and search.count(',') == 0:
+            new = search.upper()
+            
+            
+            rows = dataframe[(dataframe["state"] == new)]
+            
+            search_result_info = just_state(new)
+
             json_rows = []
             for _, row in rows.iterrows():
                 json_row = row.to_dict()
                 json_rows.append(json_row)
+            
+            return render_template('/search/searched.html', search=search, json_rows=json_rows, search_result_info=search_result_info)
+        
+        
+        # checking to see ig search query == 'nevada'
+        elif len(search) > 3 and search.count(',') == 0:
+            
+            # checking if Nevada
+            if has_uppercase(search):
+                new = search.lower()
                 
-        return render_template('/search/searched.html', search=search, json_rows=json_rows)
+                state_co = state_names[new]
+                
+                rows = dataframe[(dataframe["state"] == state_co)]
+                
+                search_result_info = just_state2(new)
+
+                json_rows = []
+                for _, row in rows.iterrows():
+                    json_row = row.to_dict()
+                    json_rows.append(json_row)
+                    
+                return render_template('/search/searched.html', search=search, json_rows=json_rows, search_result_info=search_result_info)
+
+
+            # checking if nevada
+            else:
+                new = state_names[search]
+                rows = dataframe[(dataframe["state"] == new)]
+                
+                search_result_info = just_state3(new)
+
+                json_rows = []
+                for _, row in rows.iterrows():
+                    json_row = row.to_dict()
+                    json_rows.append(json_row)
+
         
-    
-    
-        
+                return render_template('/search/searched.html', search=search, json_rows=json_rows, search_result_info=search_result_info)
+
     return render_template('/search/searched.html', search=search, json_rows=json_rows)
-
-
 
 
 
@@ -140,7 +454,6 @@ def index_month():
     date = str(datetime.datetime.now()).split(" ")[0].split('-')
 
     year, month, day = date
-    now = f"12/{day}/{int(year[2:])-1}"
 
     month = 12 # latest month to be updated
     year = 22 # latest year to be updated
@@ -157,6 +470,7 @@ def index_month():
             month_days.append(f"{month}/{i}/{year}")
 
     dataframe = pd.read_csv('ufo_data_nuforc.csv')
+    # dataframe = pd.read_csv('/home/cejkirk/mysite/ufo_data_nuforc.csv')
 
 
     rows = dataframe[(dataframe["date"].isin(month_days))]
@@ -167,7 +481,6 @@ def index_month():
         json_rows.append(json_row)
     
     return render_template('/month/month_index.html', json_rows=json_rows, is_index=index_cap)
-
 
 
 
@@ -225,7 +538,7 @@ def statistics():
     for state, count in n_dict.items():
         per = str(int(count) / int(number_of_rows) * 100)
         per = per[:4] + "%"
-        st = states.state_codes[state]
+        st = state_codes[state]
         
         state_count[st] = [count, per]
     
@@ -278,15 +591,22 @@ def contact_submit():
         message = request.form['message']
         
         # Connect to the database
-        cnx = mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="passw0rd0098",
-        database="ufo_data"
-        )
+        # cnx = mysql.connector.connect(
+        # host="localhost",
+        # user="root",
+        # password="passw0rd0098",
+        # database="ufo_data"
+        # )
         
     return render_template('contact_submit.html', 
                            name=name,
                            email=email,
                            message=message
         )
+    
+    
+    
+
+@app.errorhandler(500)
+def page_not_found(e):
+    return render_template('500.html'), 500

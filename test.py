@@ -375,3 +375,4 @@ elif len(search) > 3 and search.count(',') == 0:
         # return render_template('/search/searched.html', search=search, json_rows=json_rows, search_result_info=search_result_info)
 
 
+

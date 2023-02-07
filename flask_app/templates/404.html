@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    <title>404 - Page Not Found</title>
+{% endblock title %}
+
+
+
+{% block index %}
+    
+
+    <div class="page-not-found" style="width: 80%; margin: auto; text-align: center; color: white; margin-top: 100px;">
+
+        <h1>404 Error</h1>
+        <p>The requested page could not be found on our server. It may have been moved, 
+            deleted, or temporarily unavailable. Please check the URL and try again or 
+            return to the <a href="{{ url_for ('index') }}">home</a> page.</p>
+
+    </div>
+
+
+{% endblock index %}

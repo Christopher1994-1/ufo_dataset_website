@@ -25,7 +25,12 @@
 <!-- code for when/if user types in something -->
 {% if search %}
     <!-- code for main container -->
-    <p id="search-results-para">{{ search_result_info }}</p>
+    {% if value == 0 %}
+        <p id="search-results-para">{{ search_result_info }}</p>
+    {% else %}
+        <p id="search-results-para">No such result   '{{ search }}'   please check spelling and try again.</p>
+    {% endif %}
+
     <div class="main-data-output-container">
         <!-- code for container for output -->
         <div class="main-data-output-output">

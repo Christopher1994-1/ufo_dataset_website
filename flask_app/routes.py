@@ -346,6 +346,8 @@ def index_search():
     if request.method == 'POST':
         search = request.form['query']
         
+        if search != '':
+            value = 1
         
         # checking to see if search query == 'las vegas, nv'
         if search.count(','):
@@ -355,6 +357,7 @@ def index_search():
         
             # checking if state == nv
             if len(state) == 2:
+                value = 0 # value == 0, 0 issues
                 # getting the return result for string 
                 search_result_info = city_state_lower(query)
                 
@@ -366,11 +369,12 @@ def index_search():
                     json_row = row.to_dict()
                     json_rows.append(json_row)
                 
-                return render_template('/search/searched.html', search=search, json_rows=json_rows, search_result_info=search_result_info)
+                return render_template('/search/searched.html', value=value, search=search, json_rows=json_rows, search_result_info=search_result_info)
             
             
             # checking if state == nevada
             else:
+                value = 0 # value == 0, 0 issues
                 # getting the state to be lowercase
                 state = state.lower()
                 # indexing the state from the state_names dict to gets it code
@@ -387,12 +391,13 @@ def index_search():
                     json_row = row.to_dict()
                     json_rows.append(json_row)
                     
-                return render_template('/search/searched.html', search=search, json_rows=json_rows, search_result_info=search_result_info)
+                return render_template('/search/searched.html', value=value, search=search, json_rows=json_rows, search_result_info=search_result_info)
             
     
         #checking to see search query == 'nv'
         elif len(search) == 2 and search.count(',') == 0:
             new = search.upper()
+            value = 0 # value == 0, 0 issues
             
             
             rows = dataframe[(dataframe["state"] == new)]
@@ -404,7 +409,7 @@ def index_search():
                 json_row = row.to_dict()
                 json_rows.append(json_row)
             
-            return render_template('/search/searched.html', search=search, json_rows=json_rows, search_result_info=search_result_info)
+            return render_template('/search/searched.html', value=value, search=search, json_rows=json_rows, search_result_info=search_result_info)
         
         
         # checking to see ig search query == 'nevada'
@@ -412,6 +417,7 @@ def index_search():
             
             # checking if Nevada
             if has_uppercase(search):
+                value = 0 # value == 0, 0 issues
                 new = search.lower()
                 
                 state_co = state_names[new]
@@ -425,11 +431,12 @@ def index_search():
                     json_row = row.to_dict()
                     json_rows.append(json_row)
                     
-                return render_template('/search/searched.html', search=search, json_rows=json_rows, search_result_info=search_result_info)
+                return render_template('/search/searched.html', value=value, search=search, json_rows=json_rows, search_result_info=search_result_info)
 
 
             # checking if nevada
-            else:
+            elif search in state_names.keys():
+                value = 0 # value == 0, 0 issues
                 new = state_names[search]
                 rows = dataframe[(dataframe["state"] == new)]
                 
@@ -441,9 +448,10 @@ def index_search():
                     json_rows.append(json_row)
 
         
-                return render_template('/search/searched.html', search=search, json_rows=json_rows, search_result_info=search_result_info)
+                return render_template('/search/searched.html', value=value, search=search, json_rows=json_rows, search_result_info=search_result_info)
 
-    return render_template('/search/searched.html', search=search, json_rows=json_rows)
+    
+        return render_template('/search/searched.html', value=value, search=search, json_rows=json_rows)
 
 
 
@@ -607,6 +615,15 @@ def contact_submit():
     
     
 
+
+
 @app.errorhandler(500)
 def page_not_found(e):
     return render_template('500.html'), 500
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+

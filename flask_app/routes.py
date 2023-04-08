@@ -4,7 +4,7 @@ import pandas as pd
 import json
 import datetime
 import calendar
-import mysql.connector
+import sqlite3
 
 
 # app = Flask(__name__)
@@ -125,6 +125,20 @@ state_codes = {
     'VI': "Virgin Islands",
 }
 
+
+
+# adding user email
+def add_email(name, email, loc):
+    # Create a database connection and cursor
+    conn = sqlite3.connect('user_data.db')
+    cur = conn.cursor()
+    
+    # Insert a row
+    cur.execute("INSERT INTO users (name, email, location) VALUES (?, ?, ?)", (name, email, loc,))
+
+    # Commit the changes and close the connection
+    conn.commit()
+    conn.close()
 
 
 
@@ -314,6 +328,8 @@ def index_sign_up():
         session['name'] = name
         session['email'] = email
         session['location'] = location
+        
+        add_email(name, email, location)
         
         # code here to add user info to a database and call first_email function
         
@@ -558,9 +574,6 @@ def statistics():
     
 
 
-
-
-
 # route for the info link 
 @app.route('/infomation', methods=["GET", "POST"])
 def info():
@@ -569,15 +582,10 @@ def info():
 
 
 
-
-
 # route for the web page 'about'
 @app.route('/about', methods=["GET", "POST"])
 def about():
     return render_template('about.html')
-
-
-
 
 
 
@@ -614,6 +622,28 @@ def contact_submit():
     
     
     
+
+
+
+# route for testing db
+@app.route('/test')
+def test():
+    k = []
+    
+    # Create a database connection and cursor
+    conn = sqlite3.connect('user_data.db')
+    cur = conn.cursor()
+    
+    for i in cur.execute("SELECT * FROM users"):
+        k.append(i)
+   
+
+    # Commit the changes and close the connection
+    conn.commit()
+    conn.close()
+    
+    return render_template('test.html', m=k,)
+
 
 
 
